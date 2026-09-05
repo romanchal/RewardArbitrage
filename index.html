@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>RewardHub - Claim Your ₹10 Instant Bonus</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Three.js for 3D Graphics -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        dark: '#050505',
+                        panel: '#121212',
+                        primary: '#00F0FF',
+                        secondary: '#7000FF',
+                        accent: '#FF0055'
+                    },
+                    animation: {
+                        'blob': 'blob 7s infinite',
+                        'glow': 'glow 2s ease-in-out infinite alternate',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        },
+                        glow: {
+                            '0%': { boxShadow: '0 0 10px #00F0FF, 0 0 20px #00F0FF' },
+                            '100%': { boxShadow: '0 0 20px #00F0FF, 0 0 30px #00F0FF' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
+        .glass-panel {
+            background: rgba(18, 18, 18, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .text-gradient {
+            background: linear-gradient(to right, #00F0FF, #7000FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.8; pointer-events: none; }
+    </style>
+</head>
+<body class="antialiased relative">
+
+    <!-- Ambient Background Glows -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary opacity-20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
+        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-secondary opacity-20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
+    </div>
+
+    <!-- Interactive 3D Background -->
+    <div id="canvas-container"></div>
+
+    <!-- Header -->
+    <nav class="fixed top-0 w-full z-50 glass-panel border-b-0">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-cube text-primary text-2xl"></i>
+                <span class="font-bold text-xl tracking-wide">Reward<span class="text-primary">Hub</span></span>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="hidden sm:block text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle text-green-500 text-[8px] animate-pulse relative -top-px mr-1"></i> System Online</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Hero -->
+    <section class="relative pt-32 pb-16 px-4 z-10 flex flex-col items-center text-center min-h-[85vh] justify-center">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-6">
+            <i class="fa-solid fa-bolt"></i> ₹10 Welcome Bonus Active
+        </div>
+        
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
+            Unlock Your <br/>
+            <span class="text-gradient">Instant Payout.</span>
+        </h1>
+        
+        <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-10">
+            Your ₹10 sign-up bonus is locked and waiting. Complete one quick verification step below to withdraw directly to your UPI.
+        </p>
+
+        <a href="#verification-tasks" class="bg-primary hover:bg-cyan-400 text-dark font-extrabold text-lg px-10 py-5 rounded-2xl transition-all transform hover:scale-105 animate-glow flex items-center gap-3 shadow-lg shadow-primary/30">
+            <i class="fa-solid fa-unlock-keyhole"></i> Verify & Claim ₹10
+        </a>
+        
+        <p class="text-xs text-gray-500 mt-4"><i class="fa-solid fa-shield-halved text-gray-400"></i> 100% Secure & Free</p>
+    </section>
+
+    <!-- Verification Tasks (The CPA Links) -->
+    <section id="verification-tasks" class="py-20 relative z-10 bg-dark/80 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-3">Step 1: Account Verification</h2>
+                <p class="text-gray-400">To prevent bots, please complete one free task below to instantly unlock your wallet.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Task 1 (Best Converting CPA Link) -->
+                <a href="YOUR_CPA_LINK_1_HERE" target="_blank" class="glass-panel p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between group hover:border-primary/50 transition-all cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+                    <div class="flex items-center gap-4 mb-4 md:mb-0 w-full md:w-auto">
+                        <div class="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-brands fa-google-play text-2xl text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-lg group-hover:text-primary transition-colors">Install & Open App</h3>
+                            <p class="text-sm text-gray-400">Download and open for 30 seconds.</p>
+                        </div>
+                    </div>
+                    <button class="w-full md:w-auto bg-white/10 hover:bg-primary hover:text-dark text-white font-bold py-3 px-8 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        Start <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </a>
+
+                <!-- Task 2 (Alternative CPA Link) -->
+                <a href="YOUR_CPA_LINK_2_HERE" target="_blank" class="glass-panel p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between group hover:border-secondary/50 transition-all cursor-pointer relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
+                    <div class="flex items-center gap-4 mb-4 md:mb-0 w-full md:w-auto">
+                        <div class="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0">
+                            <i class="fa-solid fa-gamepad text-2xl text-white"></i>
+                        </div>
+                        <div class="text-left">
+                            <h3 class="font-bold text-lg group-hover:text-secondary transition-colors">Play a Free Game</h3>
+                            <p class="text-sm text-gray-400">Register and play for 1 minute.</p>
+                        </div>
+                    </div>
+                    <button class="w-full md:w-auto bg-white/10 hover:bg-secondary hover:text-white text-white font-bold py-3 px-8 rounded-xl transition-colors flex items-center justify-center gap-2">
+                        Start <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Telegram Funnel -->
+    <section class="py-16 relative z-10 px-4">
+        <div class="max-w-4xl mx-auto glass-panel p-8 md:p-12 rounded-3xl text-center border-accent/30 relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 blur-3xl rounded-full"></div>
+            
+            <i class="fa-brands fa-telegram text-5xl text-[#0088cc] mb-6"></i>
+            <h2 class="text-2xl md:text-4xl font-bold mb-4">Step 2: Join For Daily Drops</h2>
+            <p class="text-gray-400 mb-8 max-w-lg mx-auto">Join our official channel to get daily high-paying task alerts and instant withdrawal proofs.</p>
+            
+            <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="inline-block bg-[#0088cc] hover:bg-[#0077b3] text-white font-bold text-lg px-10 py-4 rounded-xl transition-all shadow-lg shadow-[#0088cc]/30">
+                Join Official Channel
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 text-center border-t border-white/5 relative z-10 bg-dark">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="text-gray-500 text-sm font-bold tracking-widest uppercase">
+                <i class="fa-solid fa-cube text-primary mr-1"></i> RewardHub
+            </div>
+            <div class="flex gap-6 text-sm text-gray-500">
+                <a href="#" class="hover:text-white transition">Terms</a>
+                <a href="#" class="hover:text-white transition">Privacy</a>
+                <a href="YOUR_TELEGRAM_LINK_HERE" class="hover:text-white transition">Support</a>
+            </div>
+            <div class="text-gray-600 text-xs">
+                © 2026 All Rights Reserved.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky CTA (Only shows on small screens when scrolling) -->
+    <div class="fixed bottom-0 left-0 w-full p-4 glass-panel border-t border-white/10 md:hidden z-50">
+        <a href="#verification-tasks" class="w-full bg-primary text-dark font-extrabold py-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+            Unlock Wallet Now <i class="fa-solid fa-arrow-up"></i>
+        </a>
+    </div>
+
+    <!-- Lightweight 3D Background Script -->
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+        // Create abstract floating geometric shapes instead of a heavy phone model
+        const geometry1 = new THREE.IcosahedronGeometry(2, 0);
+        const material1 = new THREE.MeshBasicMaterial({ 
+            color: 0x00F0FF, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.15 
+        });
+        const shape1 = new THREE.Mesh(geometry1, material1);
+        
+        const geometry2 = new THREE.OctahedronGeometry(1.5, 0);
+        const material2 = new THREE.MeshBasicMaterial({ 
+            color: 0x7000FF, 
+            wireframe: true, 
+            transparent: true, 
+            opacity: 0.2 
+        });
+        const shape2 = new THREE.Mesh(geometry2, material2);
+
+        scene.add(shape1);
+        scene.add(shape2);
+
+        camera.position.z = 5;
+
+        // Position shapes depending on screen size
+        if(window.innerWidth > 768) {
+            shape1.position.set(3, 1, -2);
+            shape2.position.set(-4, -1, -3);
+        } else {
+            shape1.position.set(0, 2, -2);
+            shape2.position.set(0, -2, -3);
+        }
+
+        // Mouse interaction tracking
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
+            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Auto rotation
+            shape1.rotation.x += 0.002;
+            shape1.rotation.y += 0.003;
+            
+            shape2.rotation.x -= 0.003;
+            shape2.rotation.y += 0.002;
+
+            // Interactive subtle movement based on mouse
+            shape1.position.x += (mouseX * 0.5 - shape1.position.x + (window.innerWidth > 768 ? 3 : 0)) * 0.05;
+            shape1.position.y += (mouseY * 0.5 - shape1.position.y + (window.innerWidth > 768 ? 1 : 2)) * 0.05;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+          </html>
+          
