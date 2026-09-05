@@ -1,274 +1,385 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RewardHub - Claim Your ₹10 Instant Bonus</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DragonLoot - Slay Quests, Earn Cash</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Three.js for 3D Graphics -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-
+    
+    <!-- Google Fonts: Space Grotesk -->
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    fontFamily: {
+                        sans: ['Space Grotesk', 'sans-serif'],
+                    },
                     colors: {
-                        dark: '#050505',
-                        panel: '#121212',
-                        primary: '#00F0FF',
-                        secondary: '#7000FF',
-                        accent: '#FF0055'
+                        brand: {
+                            green: '#00FF00', 
+                            blue: '#2B1C9B',  
+                            dark: '#111111',
+                            gray: '#F4F4F4'
+                        }
                     },
                     animation: {
-                        'blob': 'blob 7s infinite',
-                        'glow': 'glow 2s ease-in-out infinite alternate',
+                        'float-slow': 'float 6s ease-in-out infinite',
+                        'float-fast': 'float 4s ease-in-out infinite',
+                        'marquee': 'marquee 25s linear infinite',
                     },
                     keyframes: {
-                        blob: {
-                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
-                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
-                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
-                            '100%': { transform: 'translate(0px, 0px) scale(1)' }
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-20px) rotate(5deg)' },
                         },
-                        glow: {
-                            '0%': { boxShadow: '0 0 10px #00F0FF, 0 0 20px #00F0FF' },
-                            '100%': { boxShadow: '0 0 20px #00F0FF, 0 0 30px #00F0FF' }
+                        marquee: {
+                            '0%': { transform: 'translateX(0%)' },
+                            '100%': { transform: 'translateX(-100%)' },
                         }
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        body { background-color: #050505; color: #ffffff; overflow-x: hidden; }
-        .glass-panel {
-            background: rgba(18, 18, 18, 0.65);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        body {
+            background-color: #FFFFFF;
+            color: #111111;
+            overflow-x: hidden;
         }
-        .text-gradient {
-            background: linear-gradient(to right, #00F0FF, #7000FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .highlight-green {
+            background-color: #00FF00;
+            padding: 0 0.2em;
+            border-radius: 4px;
+            display: inline-block;
+            line-height: 1.1;
         }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.8; pointer-events: none; }
+        .highlight-purple {
+            background-color: #E2B5FF;
+            padding: 0 0.2em;
+            border-radius: 4px;
+            display: inline-block;
+            line-height: 1.1;
+        }
+        .madlib-input {
+            border: none;
+            border-bottom: 2px solid #ccc;
+            background: transparent;
+            font-family: inherit;
+            font-weight: 700;
+            color: #111;
+            padding: 0 10px;
+            margin: 0 10px;
+            width: auto;
+            min-width: 150px;
+            text-align: center;
+        }
+        .madlib-input:focus {
+            outline: none;
+            border-bottom-color: #00FF00;
+        }
+        .madlib-input::placeholder {
+            color: #aaa;
+            font-weight: 400;
+        }
+        .marquee-container {
+            overflow: hidden;
+            white-space: nowrap;
+            display: flex;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+        }
+        .marquee-content {
+            display: flex;
+            gap: 2rem;
+            min-width: 100%;
+            padding: 1rem 0;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #fff; }
+        ::-webkit-scrollbar-thumb { background: #111; border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased relative">
+<body class="antialiased selection:bg-brand-green selection:text-black">
 
-    <!-- Ambient Background Glows -->
-    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary opacity-20 rounded-full mix-blend-screen filter blur-[100px] animate-blob"></div>
-        <div class="absolute top-[20%] right-[-10%] w-96 h-96 bg-secondary opacity-20 rounded-full mix-blend-screen filter blur-[100px] animate-blob animation-delay-2000"></div>
-    </div>
-
-    <!-- Interactive 3D Background -->
-    <div id="canvas-container"></div>
-
-    <!-- Header -->
-    <nav class="fixed top-0 w-full z-50 glass-panel border-b-0">
-        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-cube text-primary text-2xl"></i>
-                <span class="font-bold text-xl tracking-wide">Reward<span class="text-primary">Hub</span></span>
-            </div>
-            <div class="flex items-center gap-3">
-                <span class="hidden sm:block text-xs text-gray-400 font-semibold uppercase tracking-wider"><i class="fa-solid fa-circle text-green-500 text-[8px] animate-pulse relative -top-px mr-1"></i> System Online</span>
-            </div>
+    <!-- Navbar -->
+    <nav class="w-full flex justify-between items-center p-6 max-w-6xl mx-auto relative z-50">
+        <div class="font-black text-2xl tracking-tighter uppercase flex items-center gap-2">
+            <span class="text-4xl">🐉</span> DragonLoot
         </div>
+        <div class="hidden md:flex gap-6 bg-brand-dark text-white px-6 py-2 rounded-full font-bold text-sm">
+            <a href="#story" class="hover:text-brand-green transition">The Story</a>
+            <a href="#loot" class="hover:text-brand-green transition">The Loot</a>
+            <a href="#join" class="hover:text-brand-green transition">Play Now</a>
+        </div>
+        <div class="text-3xl animate-float-slow cursor-pointer">🍔</div>
     </nav>
 
-    <!-- Main Hero -->
-    <section class="relative pt-32 pb-16 px-4 z-10 flex flex-col items-center text-center min-h-[85vh] justify-center">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-primary/30 text-primary text-xs font-bold uppercase tracking-widest mb-6">
-            <i class="fa-solid fa-bolt"></i> ₹10 Welcome Bonus Active
-        </div>
-        
-        <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight tracking-tight">
-            Unlock Your <br/>
-            <span class="text-gradient">Instant Payout.</span>
+    <!-- Hero Section -->
+    <header class="relative pt-10 pb-20 px-4 text-center max-w-6xl mx-auto">
+        <div class="absolute top-10 left-10 text-5xl animate-float-slow select-none">🤑</div>
+        <div class="absolute top-40 right-20 text-6xl animate-float-fast select-none">⚔️</div>
+        <div class="absolute bottom-10 left-32 text-5xl animate-float-slow select-none" style="animation-delay: 1s;">🛡️</div>
+
+        <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
+            Digital Dragon <br>
+            <span class="highlight-green">Wealth Hoard</span> <br>
+            Heroes
         </h1>
-        
-        <p class="text-gray-400 text-lg md:text-xl max-w-lg mb-10">
-            Your ₹10 sign-up bonus is locked and waiting. Complete one quick verification step below to withdraw directly to your UPI.
-        </p>
 
-        <a href="#verification-tasks" class="bg-primary hover:bg-cyan-400 text-dark font-extrabold text-lg px-10 py-5 rounded-2xl transition-all transform hover:scale-105 animate-glow flex items-center gap-3 shadow-lg shadow-primary/30">
-            <i class="fa-solid fa-unlock-keyhole"></i> Verify & Claim ₹10
-        </a>
-        
-        <p class="text-xs text-gray-500 mt-4"><i class="fa-solid fa-shield-halved text-gray-400"></i> 100% Secure & Free</p>
-    </section>
+        <div class="relative w-full max-w-2xl mx-auto h-64 md:h-96 bg-gray-100 rounded-[3rem] border-4 border-brand-dark overflow-hidden my-12 flex items-center justify-center">
+            <div class="text-[120px] md:text-[180px] leading-none animate-float-fast">🐲</div>
+            <div class="absolute top-4 right-4 bg-white border-2 border-black rounded-full px-4 py-2 font-bold transform rotate-12">+₹10 Bonus</div>
+            <div class="absolute bottom-4 left-4 bg-white border-2 border-black rounded-full px-4 py-2 font-bold transform -rotate-12">Lvl 99 Boss</div>
+        </div>
 
-    <!-- Verification Tasks (The CPA Links) -->
-    <section id="verification-tasks" class="py-20 relative z-10 bg-dark/80 border-t border-white/5">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold mb-3">Step 1: Account Verification</h2>
-                <p class="text-gray-400">To prevent bots, please complete one free task below to instantly unlock your wallet.</p>
+        <h2 class="text-2xl md:text-4xl font-black max-w-4xl mx-auto leading-tight">
+            The Ancient Web-Dragon has hoarded all the 
+            <span class="highlight-green">cash payouts</span> in the digital realm.
+            <br><br>
+            Don't let it keep the wealth! <span class="highlight-purple">Protect the village,</span> 
+            complete quests, and exchange them for <span class="highlight-green">real UPI cash</span> 💰
+        </h2>
+    </header>
+
+    <!-- Scrolling Marquee 1 -->
+    <div class="marquee-container bg-brand-dark text-white text-3xl font-black uppercase tracking-widest border-y-4 border-black rotate-[-2deg] my-12">
+        <div class="marquee-content animate-marquee">
+            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
+            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
+        </div>
+        <div class="marquee-content animate-marquee absolute top-0">
+            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
+            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
+        </div>
+    </div>
+
+    <!-- Chat Bubble Story Section -->
+    <section id="story" class="max-w-4xl mx-auto px-4 py-20 relative">
+        <div class="absolute top-1/2 left-0 text-7xl animate-float-fast opacity-50 z-[-1]">📱</div>
+        
+        <div class="space-y-8">
+            <div class="flex justify-start">
+                <div class="bg-brand-green text-brand-dark font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tl-none max-w-md border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
+                    <span class="absolute -top-3 -left-3 text-xs font-black bg-white border-2 border-black px-2 py-1 rounded-full">System</span>
+                    The Digital Dragon is stealing high-paying CPA tasks all over the network!
+                </div>
             </div>
 
-            <div class="space-y-4">
-                <!-- Task 1 (Best Converting CPA Link) -->
-                <a href="YOUR_CPA_LINK_1_HERE" target="_blank" class="glass-panel p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between group hover:border-primary/50 transition-all cursor-pointer relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
-                    <div class="flex items-center gap-4 mb-4 md:mb-0 w-full md:w-auto">
-                        <div class="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-brands fa-google-play text-2xl text-white"></i>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-bold text-lg group-hover:text-primary transition-colors">Install & Open App</h3>
-                            <p class="text-sm text-gray-400">Download and open for 30 seconds.</p>
-                        </div>
-                    </div>
-                    <button class="w-full md:w-auto bg-white/10 hover:bg-primary hover:text-dark text-white font-bold py-3 px-8 rounded-xl transition-colors flex items-center justify-center gap-2">
-                        Start <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </a>
+            <div class="flex justify-end">
+                <div class="bg-brand-blue text-white font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tr-none max-w-sm border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
+                    <span class="absolute -top-3 -right-3 text-xs font-black bg-white text-black border-2 border-black px-2 py-1 rounded-full">You</span>
+                    What a nightmare! 😱 Where is my ₹10 bonus?
+                </div>
+            </div>
 
-                <!-- Task 2 (Alternative CPA Link) -->
-                <a href="YOUR_CPA_LINK_2_HERE" target="_blank" class="glass-panel p-4 md:p-6 rounded-2xl flex flex-col md:flex-row items-center justify-between group hover:border-secondary/50 transition-all cursor-pointer relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-1 h-full bg-secondary"></div>
-                    <div class="flex items-center gap-4 mb-4 md:mb-0 w-full md:w-auto">
-                        <div class="w-14 h-14 rounded-xl bg-gray-800 flex items-center justify-center flex-shrink-0">
-                            <i class="fa-solid fa-gamepad text-2xl text-white"></i>
-                        </div>
-                        <div class="text-left">
-                            <h3 class="font-bold text-lg group-hover:text-secondary transition-colors">Play a Free Game</h3>
-                            <p class="text-sm text-gray-400">Register and play for 1 minute.</p>
-                        </div>
-                    </div>
-                    <button class="w-full md:w-auto bg-white/10 hover:bg-secondary hover:text-white text-white font-bold py-3 px-8 rounded-xl transition-colors flex items-center justify-center gap-2">
-                        Start <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </a>
+            <div class="flex justify-start">
+                <div class="bg-brand-green text-brand-dark font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tl-none max-w-md border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
+                    <span class="absolute -top-3 -left-3 text-xs font-black bg-white border-2 border-black px-2 py-1 rounded-full">System</span>
+                    Your wallet is its next target 💣 Prospective heroes like you are our only hope! Complete verification to unlock the vault.
+                </div>
+            </div>
+
+            <div class="flex justify-end">
+                <div class="bg-brand-blue text-white font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tr-none max-w-sm border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
+                    <span class="absolute -top-3 -right-3 text-xs font-black bg-white text-black border-2 border-black px-2 py-1 rounded-full">You</span>
+                    I'm in! Hand me my sword! 💻
+                </div>
             </div>
         </div>
-    </section>
 
-    <!-- Telegram Funnel -->
-    <section class="py-16 relative z-10 px-4">
-        <div class="max-w-4xl mx-auto glass-panel p-8 md:p-12 rounded-3xl text-center border-accent/30 relative overflow-hidden">
-            <div class="absolute -right-10 -top-10 w-40 h-40 bg-accent/20 blur-3xl rounded-full"></div>
-            
-            <i class="fa-brands fa-telegram text-5xl text-[#0088cc] mb-6"></i>
-            <h2 class="text-2xl md:text-4xl font-bold mb-4">Step 2: Join For Daily Drops</h2>
-            <p class="text-gray-400 mb-8 max-w-lg mx-auto">Join our official channel to get daily high-paying task alerts and instant withdrawal proofs.</p>
-            
-            <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="inline-block bg-[#0088cc] hover:bg-[#0077b3] text-white font-bold text-lg px-10 py-4 rounded-xl transition-all shadow-lg shadow-[#0088cc]/30">
-                Join Official Channel
+        <div class="mt-16 text-center relative z-10">
+            <a href="#join" class="inline-block w-full md:w-auto bg-brand-green text-brand-dark font-black text-3xl md:text-5xl py-6 px-16 rounded-[2rem] border-4 border-brand-dark hover:bg-white hover:scale-105 transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]">
+                I am a hero!
             </a>
         </div>
     </section>
 
+    <!-- Info Section -->
+    <section class="max-w-6xl mx-auto px-4 py-20 text-center relative">
+        <div class="absolute top-0 right-10 text-6xl animate-float-slow">🏆</div>
+        <div class="absolute bottom-20 left-10 text-6xl animate-float-fast">🎯</div>
+
+        <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
+            The game is a great <br>
+            opportunity to get acquainted <br>
+            with the <span class="highlight-green">Dragon's Hoard</span> 🐉
+        </h2>
+        <p class="text-xl font-medium max-w-3xl mx-auto text-gray-600 mb-12">
+            The platform is known as the "Siberian Athens" of reward apps for the paradoxical number of top-tier payouts, instant UPI settlements, and daily drops per square meter!
+        </p>
+
+        <a href="#join" class="inline-block w-full md:w-3/4 mx-auto bg-brand-green text-brand-dark font-black text-4xl md:text-6xl py-8 rounded-[3rem] border-4 border-brand-dark hover:bg-brand-blue hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] uppercase">
+            Play!
+        </a>
+    </section>
+
+    <!-- Scrolling Marquee 2 -->
+    <div class="marquee-container bg-white text-gray-200 text-6xl md:text-9xl font-black uppercase tracking-tighter my-20">
+        <div class="marquee-content animate-marquee">
+            <span>LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ </span>
+        </div>
+        <div class="marquee-content animate-marquee absolute top-0">
+            <span>LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ </span>
+        </div>
+    </div>
+
+    <!-- Features / What are you playing for? -->
+    <section id="loot" class="max-w-6xl mx-auto px-4 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">
+                pss <br>
+                Wanna know a <br>
+                secret??
+            </h2>
+            <p class="text-lg font-bold mt-4 text-gray-500">blink twice if so...</p>
+            
+            <div class="mt-8 mx-auto w-32 h-16 bg-brand-green rounded-full border-4 border-brand-dark flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(17,17,17,1)]">
+                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-black"><div class="w-2 h-2 bg-black rounded-full"></div></div>
+                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-black"><div class="w-2 h-2 bg-black rounded-full"></div></div>
+            </div>
+        </div>
+
+        <h3 class="text-4xl md:text-7xl font-black text-center uppercase tracking-tighter mb-16 border-b-4 border-black pb-8">
+            What are you <br> playing for? 👾
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="bg-brand-green rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform">
+                <div class="absolute -right-10 -top-10 text-[150px] opacity-20 group-hover:rotate-12 transition-transform">🎁</div>
+                <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4 relative z-10">
+                    Gifts <br>
+                    from the partners
+                </h4>
+                <p class="text-lg font-bold relative z-10 max-w-sm">
+                    Collect virtual points, defeat tasks, and exchange them for real money: UPI cash, merchandise, and even gadgets.
+                </p>
+            </div>
+
+            <div class="bg-brand-blue text-white rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform md:mt-16">
+                <div class="absolute -left-10 -bottom-10 text-[150px] opacity-20 group-hover:-rotate-12 transition-transform">🔥</div>
+                <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4 relative z-10">
+                    Introduction <br>
+                    to top-tier <br>
+                    Offerwalls
+                </h4>
+                <p class="text-lg font-medium relative z-10">
+                    Explore the map, get acquainted with the apps of the future, learn interesting facts, and get paid for testing them out!
+                </p>
+            </div>
+
+            <div class="bg-brand-green rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform md:col-span-2">
+                <div class="flex flex-col md:flex-row items-center justify-between relative z-10">
+                    <div class="max-w-xl mb-8 md:mb-0">
+                        <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4">
+                            Have fun <br>
+                            with friends
+                        </h4>
+                        <p class="text-lg font-bold">
+                            Invite your friends to the party and follow them to protect knowledge from an intergalactic catastrophe together. Earn 10% of their loot forever!
+                        </p>
+                    </div>
+                    <div class="text-[100px] animate-float-fast">👾 🤝 🐉</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Form -->
+    <section id="join" class="max-w-4xl mx-auto px-4 py-20">
+        <div class="mb-12">
+            <p class="text-xl font-bold mb-4">Register and start the operation <br> to save the digital realm from the ancient scourge!</p>
+            
+            <div class="bg-brand-green border-4 border-brand-dark p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
+                <div class="absolute -top-6 -right-6 text-6xl animate-float-slow">💻</div>
+                <h4 class="font-black text-xl mb-2">Important!!! ↓</h4>
+                <p class="font-bold">Please enter the correct UPI ID and email address under which you will be claiming the loot. Otherwise, we won't be able to find you to deliver the gifts...</p>
+            </div>
+        </div>
+
+        <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-8">Hi! 👽</h2>
+        
+        <form onsubmit="handleFormSubmit(event)" class="text-3xl md:text-5xl font-black leading-tight md:leading-[1.4]">
+            My name is 
+            <input type="text" id="fname" required placeholder="your name" class="madlib-input"> 
+            
+            I usually play games 
+            using nickname 
+            <input type="text" id="fnickname" required placeholder="your nickname" class="madlib-input">
+            
+            <br class="hidden md:block">
+            My UPI ID is 
+            <input type="text" id="fupi" required placeholder="name@upi" class="madlib-input">
+            
+            Also my email address <br class="hidden md:block">
+            to get in touch is 
+            <input type="email" id="femail" required placeholder="your email" class="madlib-input">
+            
+            <br class="hidden md:block">
+            I'm ready to slay tasks!
+            <br><br>
+            
+            <div class="text-xl font-bold text-gray-500 mb-8 mt-4 flex items-start gap-4">
+                <input type="checkbox" required class="w-6 h-6 mt-1 accent-brand-green">
+                <p>I agree with the rules of the game, I've read the privacy policy and solemnly swear that I will slay the dragon!</p>
+            </div>
+
+            <button type="submit" class="w-full bg-brand-green text-brand-dark font-black text-5xl py-8 rounded-[3rem] border-4 border-brand-dark hover:bg-black hover:text-brand-green transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] uppercase">
+                Send!
+            </button>
+            <p id="loading-msg" class="text-lg font-bold text-center mt-4 hidden text-brand-blue">⚔️ Equipping armor... redirecting to Quests!</p>
+        </form>
+    </section>
+
     <!-- Footer -->
-    <footer class="py-10 text-center border-t border-white/5 relative z-10 bg-dark">
-        <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div class="text-gray-500 text-sm font-bold tracking-widest uppercase">
-                <i class="fa-solid fa-cube text-primary mr-1"></i> RewardHub
+    <footer class="bg-brand-dark text-white rounded-t-[3rem] pt-20 pb-10 px-4 mt-20 relative overflow-hidden">
+        <div class="absolute top-10 right-10 text-6xl opacity-20 rotate-45">🎮</div>
+        <div class="absolute bottom-20 left-10 text-6xl opacity-20 -rotate-12">📚</div>
+
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 border-b border-gray-800 pb-16">
+            <div class="max-w-2xl text-center md:text-left">
+                <div class="w-32 h-32 bg-white rounded-2xl mb-8 mx-auto md:mx-0 flex items-center justify-center border-4 border-brand-green">
+                    <i class="fa-solid fa-qrcode text-6xl text-black"></i>
+                    <div class="text-4xl">📱</div>
+                </div>
+
+                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">
+                    Follow the <span class="highlight-purple text-brand-dark">Telegram-bot</span> <br>
+                    of the game and get <br> 100 points!
+                </h2>
+                <p class="text-xl text-gray-400 font-medium">
+                    You will also receive the latest news, quests, and have the opportunity to earn extra loot and gifts!
+                </p>
+                
+                <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="inline-block mt-8 bg-white text-black font-black text-xl py-4 px-8 rounded-full hover:bg-brand-green transition-colors border-2 border-transparent">
+                    Join Channel →
+                </a>
             </div>
-            <div class="flex gap-6 text-sm text-gray-500">
-                <a href="#" class="hover:text-white transition">Terms</a>
-                <a href="#" class="hover:text-white transition">Privacy</a>
-                <a href="YOUR_TELEGRAM_LINK_HERE" class="hover:text-white transition">Support</a>
+
+            <div class="text-[200px] leading-none animate-float-slow">
+                🤑
             </div>
-            <div class="text-gray-600 text-xs">
-                © 2026 All Rights Reserved.
-            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto mt-10 flex flex-col md:flex-row justify-between items-center text-sm font-bold text-gray-500 uppercase tracking-widest gap-4">
+            <a href="#" class="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition">↑</a>
+            <p>What is DragonLoot?</p>
+            <p>© 2026 EARNCASH PRO</p>
         </div>
     </footer>
 
-    <!-- Mobile Sticky CTA (Only shows on small screens when scrolling) -->
-    <div class="fixed bottom-0 left-0 w-full p-4 glass-panel border-t border-white/10 md:hidden z-50">
-        <a href="#verification-tasks" class="w-full bg-primary text-dark font-extrabold py-4 rounded-xl flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-            Unlock Wallet Now <i class="fa-solid fa-arrow-up"></i>
-        </a>
-    </div>
-
-    <!-- Lightweight 3D Background Script -->
     <script>
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById('canvas-container').appendChild(renderer.domElement);
-
-        // Create abstract floating geometric shapes instead of a heavy phone model
-        const geometry1 = new THREE.IcosahedronGeometry(2, 0);
-        const material1 = new THREE.MeshBasicMaterial({ 
-            color: 0x00F0FF, 
-            wireframe: true, 
-            transparent: true, 
-            opacity: 0.15 
-        });
-        const shape1 = new THREE.Mesh(geometry1, material1);
-        
-        const geometry2 = new THREE.OctahedronGeometry(1.5, 0);
-        const material2 = new THREE.MeshBasicMaterial({ 
-            color: 0x7000FF, 
-            wireframe: true, 
-            transparent: true, 
-            opacity: 0.2 
-        });
-        const shape2 = new THREE.Mesh(geometry2, material2);
-
-        scene.add(shape1);
-        scene.add(shape2);
-
-        camera.position.z = 5;
-
-        // Position shapes depending on screen size
-        if(window.innerWidth > 768) {
-            shape1.position.set(3, 1, -2);
-            shape2.position.set(-4, -1, -3);
-        } else {
-            shape1.position.set(0, 2, -2);
-            shape2.position.set(0, -2, -3);
-        }
-
-        // Mouse interaction tracking
-        let mouseX = 0;
-        let mouseY = 0;
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX / window.innerWidth) * 2 - 1;
-            mouseY = -(event.clientY / window.innerHeight) * 2 + 1;
-        });
-
-        function animate() {
-            requestAnimationFrame(animate);
+        function handleFormSubmit(e) {
+            e.preventDefault(); 
             
-            // Auto rotation
-            shape1.rotation.x += 0.002;
-            shape1.rotation.y += 0.003;
-            
-            shape2.rotation.x -= 0.003;
-            shape2.rotation.y += 0.002;
-
-            // Interactive subtle movement based on mouse
-            shape1.position.x += (mouseX * 0.5 - shape1.position.x + (window.innerWidth > 768 ? 3 : 0)) * 0.05;
-            shape1.position.y += (mouseY * 0.5 - shape1.position.y + (window.innerWidth > 768 ? 1 : 2)) * 0.05;
-
-            renderer.render(scene, camera);
-        }
-
-        animate();
-
-        // Handle window resize
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-    </script>
-</body>
-          </html>
-          
+            const btn = e.target.querySelector('button[type="submit"]');
+            const msg = document.ge
