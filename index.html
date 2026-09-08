@@ -3,383 +3,399 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DragonLoot - Slay Quests, Earn Cash</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Space Grotesk -->
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Space Grotesk', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            green: '#00FF00', 
-                            blue: '#2B1C9B',  
-                            dark: '#111111',
-                            gray: '#F4F4F4'
-                        }
-                    },
-                    animation: {
-                        'float-slow': 'float 6s ease-in-out infinite',
-                        'float-fast': 'float 4s ease-in-out infinite',
-                        'marquee': 'marquee 25s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-20px) rotate(5deg)' },
-                        },
-                        marquee: {
-                            '0%': { transform: 'translateX(0%)' },
-                            '100%': { transform: 'translateX(-100%)' },
-                        }
-                    }
-                }
+    <title>Tech Club Core Recruitment</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f8fafc;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.9);
+            --terminal-bg: #ffffff;
+            --terminal-border: #e2e8f0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            /* Subtle Dot Grid Background */
+            background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
+            background-size: 25px 25px;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        /* Glassmorphism Panel Styling */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        h2 {
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        /* Form Styling */
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        input[type="text"], input[type="url"] {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #cbd5e1;
+            background: rgba(255, 255, 255, 0.9);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="url"]:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        button.btn-primary {
+            width: 100%;
+            padding: 0.8rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Terminal Chatbot Styling */
+        .terminal-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        .dot.red { background-color: #ef4444; }
+        .dot.yellow { background-color: #f59e0b; }
+        .dot.green { background-color: #10b981; }
+
+        .chat-box {
+            flex-grow: 1;
+            background: var(--terminal-bg);
+            border: 1px solid var(--terminal-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+            max-height: 400px;
+        }
+
+        .message {
+            opacity: 0;
+            animation: slideUp 0.3s forwards ease-out;
+        }
+
+        .message.bot {
+            color: var(--text-main);
+        }
+
+        .message.bot::before {
+            content: "> ";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .message.user {
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        /* Options inside Chat */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+        }
+
+        .option-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Hidden elements initially */
+        #chat-input-container {
+            display: none;
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        #chat-input-container.hidden {
+            display: none !important;
+        }
+
+        #chat-input {
+            flex-grow: 1;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .chat-box {
+                min-height: 350px;
             }
         }
-    </script>
-    
-    <style>
-        body {
-            background-color: #FFFFFF;
-            color: #111111;
-            overflow-x: hidden;
-        }
-        .highlight-green {
-            background-color: #00FF00;
-            padding: 0 0.2em;
-            border-radius: 4px;
-            display: inline-block;
-            line-height: 1.1;
-        }
-        .highlight-purple {
-            background-color: #E2B5FF;
-            padding: 0 0.2em;
-            border-radius: 4px;
-            display: inline-block;
-            line-height: 1.1;
-        }
-        .madlib-input {
-            border: none;
-            border-bottom: 2px solid #ccc;
-            background: transparent;
-            font-family: inherit;
-            font-weight: 700;
-            color: #111;
-            padding: 0 10px;
-            margin: 0 10px;
-            width: auto;
-            min-width: 150px;
-            text-align: center;
-        }
-        .madlib-input:focus {
-            outline: none;
-            border-bottom-color: #00FF00;
-        }
-        .madlib-input::placeholder {
-            color: #aaa;
-            font-weight: 400;
-        }
-        .marquee-container {
-            overflow: hidden;
-            white-space: nowrap;
-            display: flex;
-            width: 100vw;
-            position: relative;
-            left: 50%;
-            right: 50%;
-            margin-left: -50vw;
-            margin-right: -50vw;
-        }
-        .marquee-content {
-            display: flex;
-            gap: 2rem;
-            min-width: 100%;
-            padding: 1rem 0;
-        }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #fff; }
-        ::-webkit-scrollbar-thumb { background: #111; border-radius: 10px; }
     </style>
 </head>
-<body class="antialiased selection:bg-brand-green selection:text-black">
+<body>
 
-    <!-- Navbar -->
-    <nav class="w-full flex justify-between items-center p-6 max-w-6xl mx-auto relative z-50">
-        <div class="font-black text-2xl tracking-tighter uppercase flex items-center gap-2">
-            <span class="text-4xl">🐉</span> DragonLoot
-        </div>
-        <div class="hidden md:flex gap-6 bg-brand-dark text-white px-6 py-2 rounded-full font-bold text-sm">
-            <a href="#story" class="hover:text-brand-green transition">The Story</a>
-            <a href="#loot" class="hover:text-brand-green transition">The Loot</a>
-            <a href="#join" class="hover:text-brand-green transition">Play Now</a>
-        </div>
-        <div class="text-3xl animate-float-slow cursor-pointer">🍔</div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header class="relative pt-10 pb-20 px-4 text-center max-w-6xl mx-auto">
-        <div class="absolute top-10 left-10 text-5xl animate-float-slow select-none">🤑</div>
-        <div class="absolute top-40 right-20 text-6xl animate-float-fast select-none">⚔️</div>
-        <div class="absolute bottom-10 left-32 text-5xl animate-float-slow select-none" style="animation-delay: 1s;">🛡️</div>
-
-        <h1 class="text-5xl md:text-8xl font-black uppercase tracking-tighter leading-[0.9] mb-8">
-            Digital Dragon <br>
-            <span class="highlight-green">Wealth Hoard</span> <br>
-            Heroes
-        </h1>
-
-        <div class="relative w-full max-w-2xl mx-auto h-64 md:h-96 bg-gray-100 rounded-[3rem] border-4 border-brand-dark overflow-hidden my-12 flex items-center justify-center">
-            <div class="text-[120px] md:text-[180px] leading-none animate-float-fast">🐲</div>
-            <div class="absolute top-4 right-4 bg-white border-2 border-black rounded-full px-4 py-2 font-bold transform rotate-12">+₹10 Bonus</div>
-            <div class="absolute bottom-4 left-4 bg-white border-2 border-black rounded-full px-4 py-2 font-bold transform -rotate-12">Lvl 99 Boss</div>
+    <div class="container">
+        <!-- Left Side: Basic Info Form -->
+        <div class="glass-panel">
+            <h2>Core Recruitment</h2>
+            <p class="subtitle">Join the elite tech club. Enter your details below.</p>
+            
+            <form id="recruitment-form">
+                <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input type="text" id="fname" required placeholder="John">
+                </div>
+                <div class="form-group">
+                    <label for="lname">Surname</label>
+                    <input type="text" id="lname" required placeholder="Doe">
+                </div>
+                <div class="form-group">
+                    <label for="linkedin">LinkedIn Profile URL</label>
+                    <input type="url" id="linkedin" required placeholder="https://linkedin.com/in/johndoe">
+                </div>
+                <div class="form-group">
+                    <label for="github">GitHub Profile URL</label>
+                    <input type="url" id="github" required placeholder="https://github.com/johndoe">
+                </div>
+                <button type="submit" class="btn-primary" id="start-chat-btn">Initialize Interview Process</button>
+            </form>
         </div>
 
-        <h2 class="text-2xl md:text-4xl font-black max-w-4xl mx-auto leading-tight">
-            The Ancient Web-Dragon has hoarded all the 
-            <span class="highlight-green">cash payouts</span> in the digital realm.
-            <br><br>
-            Don't let it keep the wealth! <span class="highlight-purple">Protect the village,</span> 
-            complete quests, and exchange them for <span class="highlight-green">real UPI cash</span> 💰
-        </h2>
-    </header>
+        <!-- Right Side: Terminal Chatbot -->
+        <div class="glass-panel terminal-container" id="terminal-section" style="opacity: 0.5; pointer-events: none; transition: opacity 0.5s;">
+            <div class="terminal-header">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            
+            <div class="chat-box" id="chat-box">
+                <div class="message bot">System standing by. Awaiting profile submission...</div>
+            </div>
 
-    <!-- Scrolling Marquee 1 -->
-    <div class="marquee-container bg-brand-dark text-white text-3xl font-black uppercase tracking-widest border-y-4 border-black rotate-[-2deg] my-12">
-        <div class="marquee-content animate-marquee">
-            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
-            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
-        </div>
-        <div class="marquee-content animate-marquee absolute top-0">
-            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
-            <span>⚔️ SLAY QUESTS 💎 EARN CRYPTO 🐉 BEAT THE DRAGON 💰 INSTANT UPI </span>
+            <div id="chat-input-container" class="hidden">
+                <input type="text" id="chat-input" placeholder="Type your answer here..." autocomplete="off">
+                <button class="btn-primary" style="width: auto; padding: 0.8rem 1.2rem;" onclick="handleUserInput()">Send</button>
+            </div>
         </div>
     </div>
-
-    <!-- Chat Bubble Story Section -->
-    <section id="story" class="max-w-4xl mx-auto px-4 py-20 relative">
-        <div class="absolute top-1/2 left-0 text-7xl animate-float-fast opacity-50 z-[-1]">📱</div>
-        
-        <div class="space-y-8">
-            <div class="flex justify-start">
-                <div class="bg-brand-green text-brand-dark font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tl-none max-w-md border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
-                    <span class="absolute -top-3 -left-3 text-xs font-black bg-white border-2 border-black px-2 py-1 rounded-full">System</span>
-                    The Digital Dragon is stealing high-paying CPA tasks all over the network!
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <div class="bg-brand-blue text-white font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tr-none max-w-sm border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
-                    <span class="absolute -top-3 -right-3 text-xs font-black bg-white text-black border-2 border-black px-2 py-1 rounded-full">You</span>
-                    What a nightmare! 😱 Where is my ₹10 bonus?
-                </div>
-            </div>
-
-            <div class="flex justify-start">
-                <div class="bg-brand-green text-brand-dark font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tl-none max-w-md border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
-                    <span class="absolute -top-3 -left-3 text-xs font-black bg-white border-2 border-black px-2 py-1 rounded-full">System</span>
-                    Your wallet is its next target 💣 Prospective heroes like you are our only hope! Complete verification to unlock the vault.
-                </div>
-            </div>
-
-            <div class="flex justify-end">
-                <div class="bg-brand-blue text-white font-bold text-lg md:text-xl p-6 rounded-3xl rounded-tr-none max-w-sm border-2 border-brand-dark shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
-                    <span class="absolute -top-3 -right-3 text-xs font-black bg-white text-black border-2 border-black px-2 py-1 rounded-full">You</span>
-                    I'm in! Hand me my sword! 💻
-                </div>
-            </div>
-        </div>
-
-        <div class="mt-16 text-center relative z-10">
-            <a href="#join" class="inline-block w-full md:w-auto bg-brand-green text-brand-dark font-black text-3xl md:text-5xl py-6 px-16 rounded-[2rem] border-4 border-brand-dark hover:bg-white hover:scale-105 transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)]">
-                I am a hero!
-            </a>
-        </div>
-    </section>
-
-    <!-- Info Section -->
-    <section class="max-w-6xl mx-auto px-4 py-20 text-center relative">
-        <div class="absolute top-0 right-10 text-6xl animate-float-slow">🏆</div>
-        <div class="absolute bottom-20 left-10 text-6xl animate-float-fast">🎯</div>
-
-        <h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">
-            The game is a great <br>
-            opportunity to get acquainted <br>
-            with the <span class="highlight-green">Dragon's Hoard</span> 🐉
-        </h2>
-        <p class="text-xl font-medium max-w-3xl mx-auto text-gray-600 mb-12">
-            The platform is known as the "Siberian Athens" of reward apps for the paradoxical number of top-tier payouts, instant UPI settlements, and daily drops per square meter!
-        </p>
-
-        <a href="#join" class="inline-block w-full md:w-3/4 mx-auto bg-brand-green text-brand-dark font-black text-4xl md:text-6xl py-8 rounded-[3rem] border-4 border-brand-dark hover:bg-brand-blue hover:text-white transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] uppercase">
-            Play!
-        </a>
-    </section>
-
-    <!-- Scrolling Marquee 2 -->
-    <div class="marquee-container bg-white text-gray-200 text-6xl md:text-9xl font-black uppercase tracking-tighter my-20">
-        <div class="marquee-content animate-marquee">
-            <span>LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ </span>
-        </div>
-        <div class="marquee-content animate-marquee absolute top-0">
-            <span>LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ LOOT ☀ DAY ☀ </span>
-        </div>
-    </div>
-
-    <!-- Features / What are you playing for? -->
-    <section id="loot" class="max-w-6xl mx-auto px-4 py-20">
-        <div class="text-center mb-16">
-            <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter">
-                pss <br>
-                Wanna know a <br>
-                secret??
-            </h2>
-            <p class="text-lg font-bold mt-4 text-gray-500">blink twice if so...</p>
-            
-            <div class="mt-8 mx-auto w-32 h-16 bg-brand-green rounded-full border-4 border-brand-dark flex items-center justify-center gap-2 shadow-[4px_4px_0px_0px_rgba(17,17,17,1)]">
-                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-black"><div class="w-2 h-2 bg-black rounded-full"></div></div>
-                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center border-2 border-black"><div class="w-2 h-2 bg-black rounded-full"></div></div>
-            </div>
-        </div>
-
-        <h3 class="text-4xl md:text-7xl font-black text-center uppercase tracking-tighter mb-16 border-b-4 border-black pb-8">
-            What are you <br> playing for? 👾
-        </h3>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="bg-brand-green rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform">
-                <div class="absolute -right-10 -top-10 text-[150px] opacity-20 group-hover:rotate-12 transition-transform">🎁</div>
-                <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4 relative z-10">
-                    Gifts <br>
-                    from the partners
-                </h4>
-                <p class="text-lg font-bold relative z-10 max-w-sm">
-                    Collect virtual points, defeat tasks, and exchange them for real money: UPI cash, merchandise, and even gadgets.
-                </p>
-            </div>
-
-            <div class="bg-brand-blue text-white rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform md:mt-16">
-                <div class="absolute -left-10 -bottom-10 text-[150px] opacity-20 group-hover:-rotate-12 transition-transform">🔥</div>
-                <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4 relative z-10">
-                    Introduction <br>
-                    to top-tier <br>
-                    Offerwalls
-                </h4>
-                <p class="text-lg font-medium relative z-10">
-                    Explore the map, get acquainted with the apps of the future, learn interesting facts, and get paid for testing them out!
-                </p>
-            </div>
-
-            <div class="bg-brand-green rounded-[3rem] p-8 md:p-12 border-4 border-brand-dark shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] relative overflow-hidden group hover:-translate-y-2 transition-transform md:col-span-2">
-                <div class="flex flex-col md:flex-row items-center justify-between relative z-10">
-                    <div class="max-w-xl mb-8 md:mb-0">
-                        <h4 class="text-3xl md:text-5xl font-black leading-tight mb-4">
-                            Have fun <br>
-                            with friends
-                        </h4>
-                        <p class="text-lg font-bold">
-                            Invite your friends to the party and follow them to protect knowledge from an intergalactic catastrophe together. Earn 10% of their loot forever!
-                        </p>
-                    </div>
-                    <div class="text-[100px] animate-float-fast">👾 🤝 🐉</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- The Form -->
-    <section id="join" class="max-w-4xl mx-auto px-4 py-20">
-        <div class="mb-12">
-            <p class="text-xl font-bold mb-4">Register and start the operation <br> to save the digital realm from the ancient scourge!</p>
-            
-            <div class="bg-brand-green border-4 border-brand-dark p-6 rounded-2xl shadow-[4px_4px_0px_0px_rgba(17,17,17,1)] relative">
-                <div class="absolute -top-6 -right-6 text-6xl animate-float-slow">💻</div>
-                <h4 class="font-black text-xl mb-2">Important!!! ↓</h4>
-                <p class="font-bold">Please enter the correct UPI ID and email address under which you will be claiming the loot. Otherwise, we won't be able to find you to deliver the gifts...</p>
-            </div>
-        </div>
-
-        <h2 class="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-8">Hi! 👽</h2>
-        
-        <form onsubmit="handleFormSubmit(event)" class="text-3xl md:text-5xl font-black leading-tight md:leading-[1.4]">
-            My name is 
-            <input type="text" id="fname" required placeholder="your name" class="madlib-input"> 
-            
-            I usually play games 
-            using nickname 
-            <input type="text" id="fnickname" required placeholder="your nickname" class="madlib-input">
-            
-            <br class="hidden md:block">
-            My UPI ID is 
-            <input type="text" id="fupi" required placeholder="name@upi" class="madlib-input">
-            
-            Also my email address <br class="hidden md:block">
-            to get in touch is 
-            <input type="email" id="femail" required placeholder="your email" class="madlib-input">
-            
-            <br class="hidden md:block">
-            I'm ready to slay tasks!
-            <br><br>
-            
-            <div class="text-xl font-bold text-gray-500 mb-8 mt-4 flex items-start gap-4">
-                <input type="checkbox" required class="w-6 h-6 mt-1 accent-brand-green">
-                <p>I agree with the rules of the game, I've read the privacy policy and solemnly swear that I will slay the dragon!</p>
-            </div>
-
-            <button type="submit" class="w-full bg-brand-green text-brand-dark font-black text-5xl py-8 rounded-[3rem] border-4 border-brand-dark hover:bg-black hover:text-brand-green transition-all shadow-[8px_8px_0px_0px_rgba(17,17,17,1)] uppercase">
-                Send!
-            </button>
-            <p id="loading-msg" class="text-lg font-bold text-center mt-4 hidden text-brand-blue">⚔️ Equipping armor... redirecting to Quests!</p>
-        </form>
-    </section>
-
-    <!-- Footer -->
-    <footer class="bg-brand-dark text-white rounded-t-[3rem] pt-20 pb-10 px-4 mt-20 relative overflow-hidden">
-        <div class="absolute top-10 right-10 text-6xl opacity-20 rotate-45">🎮</div>
-        <div class="absolute bottom-20 left-10 text-6xl opacity-20 -rotate-12">📚</div>
-
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-12 border-b border-gray-800 pb-16">
-            <div class="max-w-2xl text-center md:text-left">
-                <div class="w-32 h-32 bg-white rounded-2xl mb-8 mx-auto md:mx-0 flex items-center justify-center border-4 border-brand-green">
-                    <i class="fa-solid fa-qrcode text-6xl text-black"></i>
-                    <div class="text-4xl">📱</div>
-                </div>
-
-                <h2 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-4">
-                    Follow the <span class="highlight-purple text-brand-dark">Telegram-bot</span> <br>
-                    of the game and get <br> 100 points!
-                </h2>
-                <p class="text-xl text-gray-400 font-medium">
-                    You will also receive the latest news, quests, and have the opportunity to earn extra loot and gifts!
-                </p>
-                
-                <a href="YOUR_TELEGRAM_LINK_HERE" target="_blank" class="inline-block mt-8 bg-white text-black font-black text-xl py-4 px-8 rounded-full hover:bg-brand-green transition-colors border-2 border-transparent">
-                    Join Channel →
-                </a>
-            </div>
-
-            <div class="text-[200px] leading-none animate-float-slow">
-                🤑
-            </div>
-        </div>
-
-        <div class="max-w-6xl mx-auto mt-10 flex flex-col md:flex-row justify-between items-center text-sm font-bold text-gray-500 uppercase tracking-widest gap-4">
-            <a href="#" class="w-12 h-12 border border-gray-700 rounded-full flex items-center justify-center hover:bg-white hover:text-black transition">↑</a>
-            <p>What is DragonLoot?</p>
-            <p>© 2026 EARNCASH PRO</p>
-        </div>
-    </footer>
 
     <script>
-        function handleFormSubmit(e) {
-            e.preventDefault(); 
+        const form = document.getElementById('recruitment-form');
+        const terminalSection = document.getElementById('terminal-section');
+        const chatBox = document.getElementById('chat-box');
+        const chatInputContainer = document.getElementById('chat-input-container');
+        const chatInput = document.getElementById('chat-input');
+        
+        let userName = "";
+        let selectedRole = "";
+        let chatState = 0; // 0 = idle, 1 = awaiting role reason, 2 = hackathon phase
+
+        // Roles configured for the club
+        const roles = ["AI / ML Engineer", "Database Administrator", "Python Developer", "Club CEO"];
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            userName = document.getElementById('fname').value;
             
-            const btn = e.target.querySelector('button[type="submit"]');
-            const msg = document.ge
+            // Lock form, unlock terminal
+            form.querySelectorAll('input, button').forEach(el => el.disabled = true);
+            terminalSection.style.opacity = "1";
+            terminalSection.style.pointerEvents = "auto";
+            
+            chatBox.innerHTML = ''; // clear chat
+            
+            setTimeout(() => addBotMessage(`Profile accepted. Welcome, ${userName}.`), 300);
+            setTimeout(() => askForRole(), 1200);
+        });
+
+        function addBotMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message bot';
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function addUserMessage(text) {
+            const div = document.createElement('div');
+            div.className = 'message user';
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function askForRole() {
+            addBotMessage("Please select the core role you are applying for:");
+            
+            const optionsGrid = document.createElement('div');
+            optionsGrid.className = 'options-grid message'; // added message class for animation
+            
+            roles.forEach(role => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = role;
+                btn.onclick = () => selectRole(role, optionsGrid);
+                optionsGrid.appendChild(btn);
+            });
+            
+            chatBox.appendChild(optionsGrid);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function selectRole(role, gridElement) {
+            // Remove buttons so they can't be clicked again
+            gridElement.remove();
+            selectedRole = role;
+            
+            addUserMessage(`I am applying for: ${role}`);
+            
+            setTimeout(() => {
+                addBotMessage(`Interesting choice. Why do you believe you are the best fit for the ${role} position?`);
+                chatInputContainer.classList.remove('hidden');
+                chatInput.focus();
+                chatState = 1; // Now waiting for text input
+            }, 800);
+        }
+
+        function handleUserInput() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+
+            addUserMessage(text);
+            chatInput.value = '';
+            chatInputContainer.classList.add('hidden'); // hide input while bot "thinks"
+
+            if (chatState === 1) {
+                // Bifurcation/Logic phase complete -> move to Hackathon
+                setTimeout(() => {
+                    addBotMessage("Analyzing response logic... Acceptable.");
+                }, 1000);
+
+                setTimeout(() => {
+                    addBotMessage(`To finalize your application for ${selectedRole}, we will proceed to the Ideation Hackathon phase.`);
+                }, 2500);
+                
+                setTimeout(() => {
+                    addBotMessage("CHALLENGE: You have 24 hours to design an automated system that solves a campus problem using your chosen tech stack. Check your email for repository links and instructions. Good luck.");
+                    chatState = 2; // Finished
+                }, 4000);
+            }
+        }
+
+        // Allow pressing Enter to send message
+        chatInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                handleUserInput();
+            }
+        });
+    </script>
+</body>
+</html>
