@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Coding Club Site — Setup & Deploy Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2ecdf;
+    --card: #f8f3e6;
+    --ink: #1b1a17;
+    --ink-soft: #45423d;
+    --ink-mute: #857f74;
+    --rule: #d4ccb8;
+    --accent: #a66b2c;
+    --accent-ink: #7c4d1a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--ink); }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 4rem 1.5rem 6rem;
+  }
+  header { margin-bottom: 3rem; border-bottom: 1px solid var(--rule); padding-bottom: 2rem; }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--accent-ink);
+    margin-bottom: 1rem;
+    font-weight: 500;
+  }
+  h1 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: clamp(2rem, 4.5vw, 2.8rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.75rem;
+  }
+  h1 em { color: var(--accent-ink); font-style: italic; }
+  .lede { color: var(--ink-soft); font-size: 1.05rem; margin: 0; }
+
+  section { margin: 3.5rem 0 2rem; }
+  h2 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.75rem;
+    letter-spacing: -0.015em;
+    margin: 0 0 1.25rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+  }
+  h2 .num {
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 500;
+    letter-spacing: 0.05em;
+  }
+  h3 {
+    font-family: 'Fraunces', Georgia, serif;
+    font-weight: 500;
+    font-size: 1.15rem;
+    margin: 2rem 0 0.75rem;
+    color: var(--ink);
+  }
+  p { margin: 0 0 1rem; color: var(--ink-soft); }
+  ol, ul { padding-left: 1.25rem; color: var(--ink-soft); }
+  li { margin-bottom: 0.65rem; }
+
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: rgba(166, 107, 44, 0.1);
+    color: var(--accent-ink);
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+  }
+  pre {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    background: var(--card);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    padding: 0.9rem 1.1rem;
+    overflow-x: auto;
+    margin: 0.75rem 0 1.25rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  pre code { background: none; color: inherit; padding: 0; }
+
+  .callout {
+    background: var(--card);
+    border: 1px solid var(--rule);
+    padding: 1.1rem 1.25rem;
+    margin: 1.25rem 0;
+    position: relative;
+  }
+  .callout::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 3px;
+    background: var(--accent);
+  }
+  .callout strong { color: var(--ink); }
+
+  a { color: var(--accent-ink); text-decoration: none; border-bottom: 1px solid rgba(166,107,44,0.3); }
+  a:hover { border-bottom-color: var(--accent-ink); }
+
+  footer {
+    margin-top: 5rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.85rem;
+    color: var(--ink-mute);
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Coding Club · PBCOE · Setup Guide</div>
+  <h1>How to <em>run and deploy</em> this website.</h1>
+  <p class="lede">A short, non-technical walkthrough. Follow the steps top to bottom.</p>
+</header>
+
+<section>
+  <h2><span class="num">01</span> What you need first</h2>
+  <p>Install these once on your computer. They are all free.</p>
+  <ol>
+    <li><strong>Node.js</strong> — download from <a href="https://nodejs.org" target="_blank">nodejs.org</a>. Pick the LTS version. Install with default options.</li>
+    <li><strong>Git</strong> — download from <a href="https://git-scm.com" target="_blank">git-scm.com</a>. Install with defaults.</li>
+    <li>A code editor if you don't have one — <a href="https://code.visualstudio.com" target="_blank">VS Code</a> is fine.</li>
+  </ol>
+  <div class="callout">
+    <strong>Check installs worked.</strong> Open Terminal (Mac) or PowerShell (Windows) and type <code>node -v</code> and <code>git --version</code>. If both print a version number, you're good.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">02</span> Run the website on your laptop</h2>
+
+  <h3>Get the code</h3>
+  <pre><code>git clone https://github.com/romanchal/RewardArbitrage.git
+cd RewardArbitrage/app</code></pre>
+
+  <h3>Install dependencies</h3>
+  <p>This downloads the libraries the site uses. Takes about a minute.</p>
+  <pre><code>npm install</code></pre>
+
+  <h3>Start the dev server</h3>
+  <pre><code>npm run dev</code></pre>
+  <p>Open <a href="http://localhost:5173" target="_blank">http://localhost:5173</a> in your browser. That's the site running locally. Change any file — it refreshes on save.</p>
+
+  <div class="callout">
+    <strong>Stop the server:</strong> press <code>Ctrl + C</code> in the terminal.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">03</span> Deploy to Firebase (free)</h2>
+  <p>Firebase Hosting gives you a free public URL like <code>your-app.web.app</code>. The site already uses Firebase for its database, so this is the easiest place to host it.</p>
+
+  <h3>Step 1 — Sign in to Firebase</h3>
+  <ol>
+    <li>Go to <a href="https://console.firebase.google.com" target="_blank">console.firebase.google.com</a> and sign in with a Google account.</li>
+    <li>You should already see the project <code>clubweb-f021e</code>. If not, ask the owner to add you.</li>
+  </ol>
+
+  <h3>Step 2 — Install the Firebase tool</h3>
+  <pre><code>npm install -g firebase-tools</code></pre>
+  <p>Then log in from the terminal:</p>
+  <pre><code>firebase login</code></pre>
+  <p>A browser window opens. Sign in with the same Google account. Close the tab when done.</p>
+
+  <h3>Step 3 — Build the site</h3>
+  <p>This creates a production-ready folder called <code>dist</code>.</p>
+  <pre><code>cd RewardArbitrage/app
+npm run build</code></pre>
+
+  <h3>Step 4 — Deploy</h3>
+  <pre><code>firebase deploy</code></pre>
+  <p>Wait 30–60 seconds. The terminal prints a URL — that's your live website. Share it.</p>
+
+  <div class="callout">
+    <strong>Re-deploying later:</strong> after any code changes, just run <code>npm run build</code> then <code>firebase deploy</code> again.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">04</span> View submissions in Excel</h2>
+  <p>Every form submission is saved automatically. To download them as an Excel file:</p>
+
+  <ol>
+    <li>Open the admin page in your browser. On the live site it's:<br>
+      <code>https://your-app.web.app/admin?key=pbcoe-ai-2026</code>
+      <br>Locally it's:<br>
+      <code>http://localhost:5173/admin?key=pbcoe-ai-2026</code>
+    </li>
+    <li>You'll see two tabs: <strong>Committee</strong> and <strong>Members</strong>.</li>
+    <li>Click <strong>"Export .xlsx (all)"</strong> — a file downloads with both sheets inside. Open it in Excel or Google Sheets.</li>
+    <li>Use <strong>"Export .csv"</strong> if you only want the current tab.</li>
+    <li>Click <strong>"Refresh"</strong> anytime to pull the latest submissions.</li>
+  </ol>
+
+  <div class="callout">
+    <strong>Keep the admin key private.</strong> Anyone with that URL can read submissions. To change the key, open <code>app/src/pages/Admin.jsx</code> and edit line 11 (<code>ADMIN_KEY</code>), then re-deploy.
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">05</span> Common issues</h2>
+  <ul>
+    <li><strong><code>npm install</code> fails:</strong> delete the <code>node_modules</code> folder and try again.</li>
+    <li><strong>Admin page shows "Failed to load":</strong> Firestore security rules block reads. Open the Firebase Console → Firestore → Rules and allow reads for the <code>members</code> and <code>committee</code> collections.</li>
+    <li><strong>Form says "submission failed":</strong> same reason — rules block writes. Adjust in Firebase Console.</li>
+    <li><strong>Site looks broken after deploy:</strong> re-run <code>npm run build</code> then <code>firebase deploy</code>.</li>
+  </ul>
+</section>
+
+<footer>
+  Coding Club · Department of Artificial Intelligence · PBCOE
+</footer>
+
+</div>
+</body>
+</html>
