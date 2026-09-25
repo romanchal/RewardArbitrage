@@ -31,10 +31,10 @@ export default function Admin() {
   const [params] = useSearchParams();
   const [authed, setAuthed] = useState(false);
   const [keyInput, setKeyInput] = useState('');
-  const [members, setMembers] = useState([]);
-  const [committee, setCommittee] = useState([]);
+  const [members, setMembers] = useState([]);       // leadership
+  const [participants, setParticipants] = useState([]); // general students
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState('committee');
+  const [tab, setTab] = useState('members');
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -45,12 +45,12 @@ export default function Admin() {
     setLoading(true);
     setError('');
     try {
-      const [m, c] = await Promise.all([
+      const [m, p] = await Promise.all([
         getDocs(query(collection(db, 'members'), orderBy('submittedAt', 'desc'))),
-        getDocs(query(collection(db, 'committee'), orderBy('submittedAt', 'desc'))),
+        getDocs(query(collection(db, 'participants'), orderBy('submittedAt', 'desc'))),
       ]);
       setMembers(m.docs.map((d) => ({ id: d.id, ...d.data() })));
-      setCommittee(c.docs.map((d) => ({ id: d.id, ...d.data() })));
+      setParticipants(p.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (e) {
       console.error(e);
       setError('Failed to load. Check Firestore rules — reads must be allowed for the admin.');
@@ -71,17 +71,17 @@ export default function Admin() {
 
   const downloadXLSX = () => {
     const wb = XLSX.utils.book_new();
-    if (committee.length) {
-      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(flatten(committee)), 'Committee');
-    }
     if (members.length) {
       XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(flatten(members)), 'Members');
     }
-    if (!committee.length && !members.length) {
+    if (participants.length) {
+      XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(flatten(participants)), 'Participants');
+    }
+    if (!members.length && !participants.length) {
       XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([['No records']]), 'Empty');
     }
     const stamp = new Date().toISOString().slice(0, 10);
-    XLSX.writeFile(wb, `pbcoe-coding-club-${stamp}.xlsx`);
+    XLSX.writeFile(wb, `codexcel-${stamp}.xlsx`);
   };
 
   const downloadCSV = (rows, name) => {
@@ -131,8 +131,8 @@ export default function Admin() {
     );
   }
 
-  const active = tab === 'committee' ? committee : members;
-  const total = committee.length + members.length;
+  const active = tab === 'members' ? members : participants;
+  const total = members.length + participants.length;
 
   return (
     <section className="section page-form">
@@ -142,16 +142,16 @@ export default function Admin() {
           <Link to="/" className="back-link">← Back to home</Link>
           <h2 className="section-title">Submissions.</h2>
           <p className="prose muted">
-            {total} total · {committee.length} committee · {members.length} member
+            {total} total · {members.length} members · {participants.length} participants
           </p>
 
           <div className="admin-toolbar">
             <div className="admin-tabs">
-              <button className={`admin-tab ${tab === 'committee' ? 'active' : ''}`} onClick={() => setTab('committee')}>
-                Committee ({committee.length})
-              </button>
               <button className={`admin-tab ${tab === 'members' ? 'active' : ''}`} onClick={() => setTab('members')}>
                 Members ({members.length})
+              </button>
+              <button className={`admin-tab ${tab === 'participants' ? 'active' : ''}`} onClick={() => setTab('participants')}>
+                Participants ({participants.length})
               </button>
             </div>
             <div className="admin-actions">
@@ -184,7 +184,8 @@ export default function Admin() {
                     <th>Email</th>
                     <th>Phone</th>
                     <th>Year</th>
-                    {tab === 'committee' ? <th>Role</th> : <th>Interest</th>}
+                    {tab === 'members' ? <th>Role</th> : <th>Interest</th>}
+                    <th>Laptop</th>
                     <th>Submitted</th>
                     <th></th>
                   </tr>
@@ -198,7 +199,8 @@ export default function Admin() {
                       <td>{r.email}</td>
                       <td>{r.phone}</td>
                       <td>{r.year}</td>
-                      <td>{tab === 'committee' ? r.role : r.interest}</td>
+                      <td>{tab === 'members' ? r.role : r.interest}</td>
+                      <td>{r.hasLaptop || '—'}</td>
                       <td>{formatDate(r.submittedAt)}</td>
                       <td>
                         <button className="del-btn" onClick={() => handleDelete(tab, r.id)}>Delete</button>

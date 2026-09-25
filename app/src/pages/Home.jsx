@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Reveal, DEPT, COLLEGE_SHORT } from '../shared.jsx';
+import { Reveal, DEPT, COLLEGE_SHORT, CLUB_NAME } from '../shared.jsx';
 import TechCloud from '../TechCloud.jsx';
 
 const OBJECTIVES = [
@@ -33,7 +33,7 @@ export default function Home() {
         <Reveal as="div" className="hero-inner">
           <div className="eyebrow">{DEPT} · {COLLEGE_SHORT}</div>
           <h1 className="hero-title">
-            The <em>Coding Club</em>.
+            <em>{CLUB_NAME}</em>.
             <br />A quiet room for people who build.
           </h1>
           <p className="hero-lede">
@@ -41,11 +41,11 @@ export default function Home() {
             small groups, and ship things that matter.
           </p>
           <div className="hero-actions">
-            <Link to="/register/committee" className="btn btn-primary">
-              Apply for Committee →
+            <Link to="/register/members" className="btn btn-primary">
+              Apply as Member →
             </Link>
-            <Link to="/register/student" className="btn btn-ghost">
-              Member Signup · Coming soon
+            <Link to="/register/participant" className="btn btn-ghost">
+              Join as Participant
             </Link>
           </div>
         </Reveal>
@@ -62,10 +62,10 @@ export default function Home() {
             <Reveal><h2 className="section-title">Not a society. A workshop.</h2></Reveal>
             <Reveal delay={80}>
               <p className="prose">
-                The Coding Club at the {DEPT}, {COLLEGE_SHORT}, exists so that
-                curious students can meet other curious students. We are small on
-                purpose — enough to know each other's names, few enough to review
-                each other's code.
+                {CLUB_NAME}, the coding club at the {DEPT}, {COLLEGE_SHORT},
+                exists so that curious students can meet other curious students.
+                We are small on purpose — enough to know each other's names, few
+                enough to review each other's code.
               </p>
             </Reveal>
             <Reveal delay={140}>
@@ -145,25 +145,25 @@ export default function Home() {
       <section id="register" className="section cta-section">
         <div className="cta-grid">
           <Reveal className="cta-card">
-            <div className="cta-label">For Students · Coming Soon</div>
-            <h3 className="cta-title">Join as a Member.</h3>
+            <div className="cta-label">For Students</div>
+            <h3 className="cta-title">Join as a Participant.</h3>
             <p className="cta-desc">
               Open to every {COLLEGE_SHORT} student. Attend sessions, build with
-              the cohort, borrow a mentor. Registration opens in a few days.
+              the cohort, borrow a mentor. No commitment beyond showing up.
             </p>
-            <Link to="/register/student" className="btn btn-ghost">
-              Notify me when it opens →
+            <Link to="/register/participant" className="btn btn-primary">
+              Participant Registration →
             </Link>
           </Reveal>
           <Reveal className="cta-card" delay={100}>
             <div className="cta-label">For Leaders</div>
-            <h3 className="cta-title">Apply for Committee.</h3>
+            <h3 className="cta-title">Apply as a Member.</h3>
             <p className="cta-desc">
               Run the club. Design curriculum, organize hackdays, mentor juniors.
               Best for 2nd–4th year students with time to give.
             </p>
-            <Link to="/register/committee" className="btn btn-primary">
-              Committee Application →
+            <Link to="/register/members" className="btn btn-primary">
+              Members Application →
             </Link>
           </Reveal>
         </div>

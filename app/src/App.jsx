@@ -4,7 +4,7 @@ import Home from './pages/Home.jsx';
 import StudentForm from './pages/StudentForm.jsx';
 import CommitteeForm from './pages/CommitteeForm.jsx';
 import Admin from './pages/Admin.jsx';
-import { COLLEGE, DEPT, PARENT_TRUST, ACCREDITATIONS } from './shared.jsx';
+import { COLLEGE, COLLEGE_SHORT, DEPT, PARENT_TRUST, ACCREDITATIONS, CLUB_NAME, CLUB_PRESIDENT } from './shared.jsx';
 import './App.css';
 
 function useTheme() {
@@ -102,16 +102,16 @@ function Layout({ children }) {
       <nav className={`menu-panel ${menuOpen ? 'in' : ''}`} aria-hidden={!menuOpen}>
         <div className="menu-label">Navigate</div>
         <NavLink to="/" end onClick={close}><span>H</span>Home</NavLink>
-        <NavLink to="/register/student" onClick={close}><span>M</span>Member Registration <em className="soon">soon</em></NavLink>
-        <NavLink to="/register/committee" onClick={close} className="menu-cta"><span>C</span>Committee Application</NavLink>
+        <NavLink to="/register/participant" onClick={close}><span>P</span>Participant Registration</NavLink>
+        <NavLink to="/register/members" onClick={close} className="menu-cta"><span>M</span>Members Application</NavLink>
       </nav>
 
       <main>{children}</main>
 
       <footer className="foot">
         <div className="foot-inner">
-          <div>© {new Date().getFullYear()} Coding Club · {DEPT}</div>
-          <div className="muted">{COLLEGE}</div>
+          <div>© {new Date().getFullYear()} {CLUB_NAME} · {DEPT}</div>
+          <div className="muted">President · {CLUB_PRESIDENT} · {COLLEGE_SHORT}</div>
         </div>
       </footer>
     </div>
@@ -125,8 +125,8 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/register/student" element={<StudentForm />} />
-          <Route path="/register/committee" element={<CommitteeForm />} />
+          <Route path="/register/participant" element={<StudentForm />} />
+          <Route path="/register/members" element={<CommitteeForm />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="*" element={<Home />} />
         </Routes>

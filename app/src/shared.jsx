@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 
+export const CLUB_NAME = 'CodeXcel';
+export const CLUB_PRESIDENT = 'Roman Bopche';
 export const DEPT = 'Department of Artificial Intelligence';
 export const COLLEGE = 'Priyadarshini Bhagwati College of Engineering';
 export const COLLEGE_SHORT = 'PBCOE';
@@ -15,9 +17,8 @@ export const ACCREDITATIONS = [
 
 export const YEARS = ['1st Year', '2nd Year', '3rd Year', '4th Year'];
 export const INTERESTS = ['Machine Learning', 'Deep Learning', 'Web Development', 'Competitive Programming', 'Data Science', 'Computer Vision', 'NLP', 'Robotics'];
-export const COMMITTEE_ROLES = [
-  'President',
-  'Vice President',
+// Leadership positions ("Members" in new terminology). President/VP intentionally omitted (fixed roster).
+export const MEMBER_ROLES = [
   'Technical Lead',
   'Design Lead',
   'Content Lead',

@@ -1,20 +1,22 @@
+// ponytail: filename kept for git diff sanity; semantic = Members (leadership) Application.
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Field, Reveal, YEARS, COMMITTEE_ROLES, COLLEGE, DEPT, COLLEGE_SHORT } from '../shared.jsx';
+import { Field, Reveal, YEARS, MEMBER_ROLES, COLLEGE, DEPT, COLLEGE_SHORT, CLUB_NAME } from '../shared.jsx';
 
 const empty = {
   fullName: '', email: '', phone: '', rollNo: '',
   year: '', branch: 'AI',
-  role: 'President', altRole: '',
+  role: MEMBER_ROLES[0], altRole: '',
   hoursPerWeek: '6',
+  hasLaptop: '',
   pastLeadership: '',
   vision: '',
   linkedin: '', github: ''
 };
 
-export default function CommitteeForm() {
+export default function MembersForm() {
   const [form, setForm] = useState(empty);
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState({ type: 'idle', message: '' });
@@ -38,6 +40,7 @@ export default function CommitteeForm() {
     if (!form.branch.trim()) e.branch = 'Required';
     if (!form.role) e.role = 'Required';
     if (!form.hoursPerWeek || Number(form.hoursPerWeek) < 1) e.hoursPerWeek = 'At least 1 hour';
+    if (!form.hasLaptop) e.hasLaptop = 'Required';
     if (!form.vision.trim() || form.vision.trim().length < 30) e.vision = 'At least 30 characters';
     setErrors(e);
     return Object.keys(e).length === 0;
@@ -48,22 +51,23 @@ export default function CommitteeForm() {
     if (!validate()) return;
     setStatus({ type: 'loading', message: 'Submitting...' });
     try {
-      const dupQ = query(collection(db, 'committee'), where('rollNo', '==', form.rollNo.trim()));
+      const dupQ = query(collection(db, 'members'), where('rollNo', '==', form.rollNo.trim()));
       const dupSnap = await getDocs(dupQ);
       if (!dupSnap.empty) {
-        setStatus({ type: 'error', message: 'This Roll No. has already applied for committee.' });
+        setStatus({ type: 'error', message: 'This Roll No. has already applied.' });
         return;
       }
-      const refCode = `AICC-C-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+      const refCode = `${CLUB_NAME.toUpperCase()}-M-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
       const payload = {
         ...form,
         applicationId: refCode,
         college: COLLEGE,
         dept: DEPT,
-        type: 'committee',
+        club: CLUB_NAME,
+        type: 'member',
         submittedAt: serverTimestamp()
       };
-      await addDoc(collection(db, 'committee'), payload);
+      await addDoc(collection(db, 'members'), payload);
       setReceipt(payload);
       setStatus({ type: 'success', message: 'Applied.' });
     } catch (err) {
@@ -80,13 +84,13 @@ export default function CommitteeForm() {
     <section className="section page-form alt">
       <div className="section-grid">
         <Reveal className="section-label">
-          <span className="num">C</span>
-          <span>Committee</span>
+          <span className="num">M</span>
+          <span>Members</span>
         </Reveal>
         <div className="section-body">
           <Reveal>
             <Link to="/" className="back-link">← Back to home</Link>
-            <h2 className="section-title">Committee Application.</h2>
+            <h2 className="section-title">Members Application.</h2>
           </Reveal>
           <Reveal delay={80}>
             <p className="prose muted">
@@ -108,8 +112,8 @@ export default function CommitteeForm() {
                 <div><span>Alt. Role</span><strong>{receipt.altRole || '—'}</strong></div>
                 <div><span>Hours / week</span><strong>{receipt.hoursPerWeek}</strong></div>
                 <div><span>Year</span><strong>{receipt.year}</strong></div>
+                <div><span>Laptop</span><strong>{receipt.hasLaptop}</strong></div>
                 <div><span>Email</span><strong>{receipt.email}</strong></div>
-                <div><span>Phone</span><strong>{receipt.phone}</strong></div>
               </div>
               <div className="receipt-actions">
                 <button className="btn btn-ghost" onClick={reset}>Submit another →</button>
@@ -136,18 +140,25 @@ export default function CommitteeForm() {
                 </div>
                 <div className="row-2">
                   <Field label="Preferred Role" name="role" value={form.role} onChange={handleChange} error={errors.role} as="select">
-                    {COMMITTEE_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+                    {MEMBER_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
                   </Field>
                   <Field label="Alternate Role" name="altRole" value={form.altRole} onChange={handleChange} as="select">
                     <option value="">— None —</option>
-                    {COMMITTEE_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+                    {MEMBER_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
                   </Field>
                 </div>
                 <div className="row-2">
                   <Field label="Hours per week" type="number" name="hoursPerWeek" value={form.hoursPerWeek} onChange={handleChange} error={errors.hoursPerWeek} placeholder="6" />
-                  <Field label="LinkedIn (optional)" name="linkedin" value={form.linkedin} onChange={handleChange} placeholder="linkedin.com/in/…" />
+                  <Field label="Do you have a laptop?" name="hasLaptop" value={form.hasLaptop} onChange={handleChange} error={errors.hasLaptop} as="select">
+                    <option value="">Select…</option>
+                    <option value="Yes">Yes</option>
+                    <option value="No">No</option>
+                  </Field>
                 </div>
-                <Field label="GitHub / Portfolio (optional)" name="github" value={form.github} onChange={handleChange} placeholder="github.com/…" />
+                <div className="row-2">
+                  <Field label="LinkedIn (optional)" name="linkedin" value={form.linkedin} onChange={handleChange} placeholder="linkedin.com/in/…" />
+                  <Field label="GitHub / Portfolio (optional)" name="github" value={form.github} onChange={handleChange} placeholder="github.com/…" />
+                </div>
                 <Field label="Past leadership or event experience" name="pastLeadership" value={form.pastLeadership} onChange={handleChange} as="textarea" placeholder="Clubs, events, teams, projects you led — brief bullets are fine." />
                 <Field label="Your vision for the club" name="vision" value={form.vision} onChange={handleChange} error={errors.vision} as="textarea" placeholder="What you would build, change, or protect. Minimum 30 characters." />
 
